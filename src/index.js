@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { arc } from 'd3-shape';
+import { scaleLinear } from 'd3-scale';
 import './index.css';
 
 const Gauge = ({
@@ -29,6 +30,14 @@ const Gauge = ({
     .endAngle(valueEndAngle)
     .cornerRadius(1);
 
+  const colorScale = scaleLinear()
+    .domain([0, 1])
+    .range(['#dbdbe7', '#4834d4']);
+
+  const gradientSteps = colorScale
+    .ticks(10) // Create 10 even steps between 0 and 1 (see `.domain([0, 1])`)
+    .map(colorScale); // Map numeric values to color values between `.range(['#dbdbe7', '#4834d4'])`
+
   return (
     <div>
       <svg
@@ -42,13 +51,32 @@ const Gauge = ({
         style={{
           border: "1px solid pink"
         }}>
+        <defs>
+          <linearGradient
+            id="gauge-gradient"
+            gradientUnits="userSpaceOnUse"
+            x1="-1"
+            x2="1"
+            y2="0">
+              {
+                gradientSteps
+                  .map((color, index) => (
+                    <stop
+                      key={index}
+                      stopColor={color}
+                      offset={`${index / (gradientSteps.length - 1)}`}>
+                    </stop>
+                  ))
+              }
+          </linearGradient>
+        </defs>
         <path
           d={backgroundArc()}
           fill="#dbdbe7">
         </path>
         <path
           d={valueArc()}
-          fill="#ffdbe7">
+          fill="url(#gauge-gradient)">
         </path>
       </svg>
     </div>
