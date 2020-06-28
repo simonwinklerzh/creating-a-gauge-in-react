@@ -4,6 +4,7 @@
 
 .gauge__svg-element {
   overflow: visible;
+  width: 10em;
 }
 
 .gauge__value {

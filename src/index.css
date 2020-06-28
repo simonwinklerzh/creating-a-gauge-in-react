@@ -6,3 +6,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+#root {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-gap: 3vw;
+  width: 80%;
+  margin: 0 auto;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.gauge-container {
+  font-size: 1vw;
+}
+
