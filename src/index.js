@@ -23,19 +23,22 @@ const GaugeWithSlider = ({
         label,
         units
       }} />
-      <Slider {...{
-        value: valueState,
-        min,
-        max,
-        marks: {[min]: min, [max]: max},
-        onChange: setValuestate
-      }} />
+      <div class="gauge__slider">
+        <Slider {...{
+          value: valueState,
+          min,
+          max,
+          marks: {[min]: min, [max]: max},
+          onChange: setValuestate
+        }} />
+      </div>
     </div>
   );
 };
 
 ReactDOM.render(
   <React.StrictMode>
+    <h1 class="title">Gauge control center</h1>
     <GaugeWithSlider
       value={0}
       max={2000}

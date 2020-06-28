@@ -1,22 +1,29 @@
 @import './components/gauge/gauge.css';
 
 body {
-  margin: 1em;
+  margin: 3vw;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: gray;
 }
 
 #root {
+  font-size: 1vw;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-gap: 3vw;
   width: 80%;
   margin: 0 auto;
-  grid-auto-rows: minmax(100px, auto);
+  grid-auto-rows: minmax(5em, auto);
 }
 
-.gauge-container {
-  font-size: 1vw;
+.title {
+  grid-column-start: span 3;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 1vw;
+  background: #f8f9fa;
 }
 
