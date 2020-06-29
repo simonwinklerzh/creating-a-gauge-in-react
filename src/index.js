@@ -23,15 +23,6 @@ ReactDOM.render(
       value={70}
       units="kilometers"
       componentId="3" />
-    <GaugeWithSlider
-      label="Kilometers driven"
-      value={70}
-      units="kilometers"
-      componentId="3" />
-    <GaugeWithSlider
-      label="Kilometers driven"
-      value={70}
-      units="kilometers" />
   </React.StrictMode>,
   document.getElementById('root')
 );
