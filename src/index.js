@@ -23,7 +23,7 @@ const GaugeWithSlider = ({
         label,
         units
       }} />
-      <div class="gauge__slider">
+      <div className="gauge__slider">
         <Slider {...{
           value: valueState,
           min,
@@ -38,7 +38,7 @@ const GaugeWithSlider = ({
 
 ReactDOM.render(
   <React.StrictMode>
-    <h1 class="title">Gauge control center</h1>
+    <h1 className="title">Gauge control center</h1>
     <GaugeWithSlider
       value={0}
       max={2000}
