@@ -52,6 +52,11 @@ const GaugeWithSlider = ({
 } = {}) => {
   const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
 
+  if (!componentId) {
+    console.error('You must provide a (unique persistent) id for this component to work properly');
+    return null;
+  }
+
   return (
     <div className="gauge-container">
       <Gauge {...{
