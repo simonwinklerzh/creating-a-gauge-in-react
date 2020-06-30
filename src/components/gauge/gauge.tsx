@@ -29,7 +29,7 @@ export const Gauge = ({
     innerRadius: 0.65,
     outerRadius: 1,
     startAngle: -Math.PI / 2,
-    endAngle: -Math.PI / 2
+    endAngle: Math.PI / 2
   });
 
   const percentScale = scaleLinear()
