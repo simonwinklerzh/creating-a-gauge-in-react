@@ -1,7 +1,7 @@
 import React from 'react';
 import Slider from 'rc-slider';
 import { Gauge } from '../gauge/gauge';
-import { useLocalStorage } from '../../hooks.js';
+import { useLocalStorage } from '../../hooks';
 
 export const GaugeWithSlider = ({
   value = 60,
@@ -9,7 +9,7 @@ export const GaugeWithSlider = ({
   max = 200,
   label = "Speed",
   units = "kilometers per hour",
-  componentId // Provide a component ID if you want to persist the state to local storage
+  componentId = '' // Provide a component ID if you want to persist the state to local storage
 } = {}) => {
   const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
 
@@ -32,7 +32,7 @@ export const GaugeWithSlider = ({
           value: valueState,
           min,
           max,
-          marks: {[min]: min, [max]: max},
+          marks: {[min]: String(min), [max]: String(max)},
           onChange: setValuestate
         }} />
       </div>

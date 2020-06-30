@@ -4,10 +4,18 @@ import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
 
 // Helper function
-const getCoordsOnArc = (angle, offset=10) => [
+const getCoordsOnArc = (angle: number, offset=10) => [
   Math.cos(angle - (Math.PI / 2)) * offset,
   Math.sin(angle - (Math.PI / 2)) * offset,
 ];
+
+interface iGauge {
+  readonly value?: number;
+  readonly min?: number;
+  readonly max?: number;
+  readonly label?: string;
+  readonly units?: string;
+}
 
 export const Gauge = ({
   value = 50,
@@ -15,13 +23,14 @@ export const Gauge = ({
   max = 100,
   label,
   units
-}) => {
+}: iGauge) => {
   const backgroundArc = arc()
-    .innerRadius(0.65)
-    .outerRadius(1)
-    .startAngle(-Math.PI / 2)
-    .endAngle(Math.PI / 2)
-    .cornerRadius(1);
+  .cornerRadius(1)({
+    innerRadius: 0.65,
+    outerRadius: 1,
+    startAngle: -Math.PI / 2,
+    endAngle: -Math.PI / 2
+  });
 
   const percentScale = scaleLinear()
     .domain([min, max])
@@ -37,13 +46,14 @@ export const Gauge = ({
   const valueEndAngle = angleScale(percent);
 
   const valueArc = arc()
-    .innerRadius(0.65)
-    .outerRadius(1)
-    .startAngle(-Math.PI / 2)
-    .endAngle(valueEndAngle)
-    .cornerRadius(1);
+    .cornerRadius(1)({
+      innerRadius: 0.65,
+      outerRadius: 1,
+      startAngle: -Math.PI / 2,
+      endAngle: valueEndAngle
+    });
 
-  const colorScale = scaleLinear()
+  const colorScale = scaleLinear<string>()
     .domain([0, 1])
     .range(['#dbdbe7', '#4834d4']);
 
@@ -87,14 +97,18 @@ export const Gauge = ({
               }
           </linearGradient>
         </defs>
-        <path
-          d={backgroundArc()}
-          fill="#dbdbe7">
-        </path>
-        <path
-          d={valueArc()}
-          fill="url(#gauge-gradient)">
-        </path>
+        {!!backgroundArc && (
+          <path
+            d={backgroundArc}
+            fill="#dbdbe7">
+          </path>
+        )}
+        {!!valueArc && (
+          <path
+            d={valueArc}
+            fill="url(#gauge-gradient)">
+          </path>
+        )}
         <line
           y1="-1"
           y2="-0.65"
