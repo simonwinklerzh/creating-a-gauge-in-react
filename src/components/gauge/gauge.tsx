@@ -9,7 +9,7 @@ const getCoordsOnArc = (angle: number, offset=10) => [
   Math.sin(angle - (Math.PI / 2)) * offset,
 ];
 
-interface iGauge {
+export interface iGauge {
   readonly value?: number;
   readonly min?: number;
   readonly max?: number;

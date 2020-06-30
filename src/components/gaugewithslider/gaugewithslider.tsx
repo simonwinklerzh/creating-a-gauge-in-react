@@ -1,7 +1,11 @@
 import React from 'react';
 import Slider from 'rc-slider';
-import { Gauge } from '../gauge/gauge';
+import { Gauge, iGauge } from '../gauge/gauge';
 import { useLocalStorage } from '../../hooks';
+
+export interface iGaugeWithSlider extends iGauge {
+  componentId: string;
+}
 
 export const GaugeWithSlider = ({
   value = 60,
@@ -10,7 +14,7 @@ export const GaugeWithSlider = ({
   label = "Speed",
   units = "kilometers per hour",
   componentId = '' // Provide a component ID if you want to persist the state to local storage
-} = {}) => {
+}: iGaugeWithSlider = { componentId: '' }) => {
   const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
 
   if (!componentId) {
