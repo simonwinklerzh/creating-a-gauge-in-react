@@ -21,8 +21,8 @@ export const Gauge = ({
   value = 50,
   min = 0,
   max = 100,
-  label,
-  units
+  units,
+  label
 }: iGauge) => {
   const backgroundArc = arc()
   .cornerRadius(1)({

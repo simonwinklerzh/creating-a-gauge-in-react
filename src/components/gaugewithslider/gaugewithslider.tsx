@@ -5,6 +5,7 @@ import { useLocalStorage } from '../../hooks';
 
 export interface iGaugeWithSlider extends iGauge {
   componentId: string;
+  colspan?: number;
 }
 
 export const GaugeWithSlider = ({
@@ -13,7 +14,8 @@ export const GaugeWithSlider = ({
   max = 200,
   label = "Speed",
   units = "kilometers per hour",
-  componentId = '' // Provide a component ID if you want to persist the state to local storage
+  componentId = '', // Provide a component ID if you want to persist the state to local storage
+  colspan = 1
 }: iGaugeWithSlider = { componentId: '' }) => {
   const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
 
@@ -23,7 +25,11 @@ export const GaugeWithSlider = ({
   }
 
   return (
-    <div className="gauge-container">
+    <div
+      className="gauge-container"
+      style={{
+        gridColumnStart: `span ${colspan}`
+      }}>
       <Gauge {...{
         value: valueState,
         min,

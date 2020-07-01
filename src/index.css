@@ -11,7 +11,7 @@ body {
 #root {
   font-size: 1vw;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   grid-gap: 3vw;
   width: 80%;
   margin: 0 auto;
@@ -19,7 +19,7 @@ body {
 }
 
 .title {
-  grid-column-start: span 3;
+  grid-column-start: span 9;
   margin: 0;
   display: flex;
   align-items: center;

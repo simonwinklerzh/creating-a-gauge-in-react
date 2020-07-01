@@ -12,17 +12,20 @@ ReactDOM.render(
       max={2000}
       label="Atmospheric Pressure"
       units="hectopascals"
-      componentId="1" />
+      componentId="1"
+      colspan={3} />
     <GaugeWithSlider
       value={40}
       label="Wind speed"
       units="meters per second"
-      componentId="2" />
+      componentId="2"
+      colspan={3} />
     <GaugeWithSlider
       label="Kilometers driven"
       value={70}
       units="kilometers"
-      componentId="3" />
+      componentId="3"
+      colspan={3} />
   </React.StrictMode>,
   document.getElementById('root')
 );
