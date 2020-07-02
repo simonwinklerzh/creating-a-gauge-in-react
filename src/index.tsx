@@ -1,29 +1,30 @@
 import React, { } from 'react';
 import ReactDOM from 'react-dom';
 import { GaugeWithSlider } from './components/gaugewithslider/gaugewithslider';
+import { InformationBoard } from './components/infoboard/infoboard';
 import 'rc-slider/assets/index.css';
 import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <h1 className="title">Gauge control center</h1>
+    <h1 className="title">Bubble gums control center</h1>
     <GaugeWithSlider
       value={0}
       max={2000}
-      label="Atmospheric Pressure"
-      units="hectopascals"
+      label="Bubble gums"
+      units="Quantity"
       componentId="1"
       colspan={3} />
     <GaugeWithSlider
       value={40}
-      label="Wind speed"
-      units="meters per second"
+      label="Bubble gums"
+      units="Quantity"
       componentId="2"
       colspan={3} />
     <GaugeWithSlider
-      label="Kilometers driven"
+      label="Bubble gums"
       value={70}
-      units="kilometers"
+      units="Quantity"
       componentId="3"
       colspan={3} />
   </React.StrictMode>,
