@@ -1,4 +1,6 @@
 @import './components/gauge/gauge.css';
+@import './components/gaugewithslider/gaugewithslider.css';
+/*@import './components/infoboard/infoboard.css';*/
 
 body {
   margin: 3vw;

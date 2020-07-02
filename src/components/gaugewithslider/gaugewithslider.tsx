@@ -26,7 +26,7 @@ export const GaugeWithSlider = ({
 
   return (
     <div
-      className="gauge-container"
+      className="gaugewithslider"
       style={{
         gridColumnStart: `span ${colspan}`
       }}>
@@ -37,7 +37,7 @@ export const GaugeWithSlider = ({
         label,
         units
       }} />
-      <div className="gauge__slider">
+      <div className="gaugewithslider__slider">
         <Slider {...{
           value: valueState,
           min,

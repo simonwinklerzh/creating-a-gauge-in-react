@@ -1,8 +1,3 @@
-.gauge-container {
-  padding: 3em;
-  background-color: #f8f9fa;
-}
-
 .gauge {
   text-align: center;
 }
@@ -32,8 +27,4 @@
   color: #8b8ba7;
   line-height: 1.3em;
   font-weight: 300;
-}
-
-.gauge__slider {
-  margin-top: 1em;
 }
