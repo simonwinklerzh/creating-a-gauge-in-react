@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { iCounterState } from '../../store';
+import { aggregateCountersSelector } from '../../store';
 
 export interface iInfoBoard {
   value: number;
@@ -20,9 +20,6 @@ export const InfoBoard = ({
 }
 
 export const InfoBoardRedux = () => {
-  const val = useSelector((state: iCounterState) => state.counters.reduce(function(accumulator, current) {
-    return accumulator + current.value;
-  }, 0));
-
+  const val = useSelector(aggregateCountersSelector);
   return (<InfoBoard value={val} />);
 }

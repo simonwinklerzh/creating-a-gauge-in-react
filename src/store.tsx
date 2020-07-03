@@ -37,6 +37,12 @@ export function removeCounter(counter: iCounter): iCountersAction {
   }
 }
 
+export function aggregateCountersSelector(state: iCounterState): number {
+  return state.counters.reduce((accumulator, current) => {
+    return accumulator + current.value;
+  }, 0);
+}
+
 function counters(
   state: iCounterState = { counters: [] },
   action: iCountersAction
@@ -67,3 +73,5 @@ function counters(
 }
 
 export const store = createStore(counters);
+
+// const unsubscript = store.subscribe()
