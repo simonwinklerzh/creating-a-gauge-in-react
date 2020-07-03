@@ -1,0 +1,7 @@
+.infoboard {
+  grid-column-start: span 9;
+}
+
+.infoboard__value {
+  font-size: 2em;
+}

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Slider from 'rc-slider';
 import { Gauge, iGauge } from '../gauge/gauge';
 import { useLocalStorage } from '../../hooks';
+import { store, removeCounter, updateCounter, iCounter } from '../../store';
 
 export interface iGaugeWithSlider extends iGauge {
   componentId: string;
   colspan?: number;
+  handleChange?: Function;
+  handleCleanUp?: Function;
 }
 
 export const GaugeWithSlider = ({
@@ -15,9 +18,38 @@ export const GaugeWithSlider = ({
   label = "Speed",
   units = "kilometers per hour",
   componentId = '', // Provide a component ID if you want to persist the state to local storage
-  colspan = 1
+  colspan = 1,
+  handleChange,
+  handleCleanUp
 }: iGaugeWithSlider = { componentId: '' }) => {
   const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
+
+  /**
+   * Execute the change handler when the state value
+   * changes or when the id of the component changes.
+   */
+  useEffect(() => {
+    if (handleChange) {
+      handleChange({
+        id: componentId,
+        value: valueState
+      });
+    }
+  }, [valueState, componentId, handleChange]);
+
+  /**
+   * Execute cleanup function when the id of the
+   * component changes or when the component will unmount.
+   */
+  useEffect(() => {
+    return () => {
+      if (handleCleanUp) {
+        handleCleanUp({
+          id: componentId
+        })
+      }
+    }
+  }, [componentId, handleCleanUp]);
 
   if (!componentId) {
     console.error('You must provide a (unique persistent) id for this component to work properly');
@@ -49,3 +81,18 @@ export const GaugeWithSlider = ({
     </div>
   );
 };
+
+export const GaugeWithSliderRedux = (props: iGaugeWithSlider) => {
+  return (
+    <GaugeWithSlider
+      handleChange={(value: iCounter) => {
+        // Update / add counter data into the store
+        store.dispatch(updateCounter(value))}
+      }
+      handleCleanUp={(value: iCounter) => {
+        // Remove counter data from the store
+        store.dispatch(removeCounter(value))}
+      }
+      {...props} />
+  );
+}
