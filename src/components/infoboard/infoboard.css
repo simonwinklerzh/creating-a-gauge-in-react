@@ -31,17 +31,25 @@
 
 .infoboard__log {
   margin: 0;
-  padding: 0;
+  padding: 0 0.4em;
   background-color: #120e2d;
   overflow: auto;
+  list-style-type: none;
+  line-height: 1.3em;
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+.infoboard__log:empty::before {
+  content: 'No changes yet';
+  color: #ffffff;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  display: block;
 }
 
 .infoboard__log-entry {
-  list-style-type: none;
-  line-height: 1.3em;
-  margin: 0 0.4em;
-  font-family: monospace;
-  white-space: nowrap;
+
 }
 
 .infoboard__log-entry:first-child {
