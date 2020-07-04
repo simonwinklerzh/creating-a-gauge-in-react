@@ -38,11 +38,11 @@
   line-height: 1.3em;
   font-family: monospace;
   white-space: nowrap;
+  color: #e6e6ef;
 }
 
 .infoboard__log:empty::before {
   content: 'No changes yet';
-  color: #ffffff;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   display: block;

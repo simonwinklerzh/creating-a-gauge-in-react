@@ -28,14 +28,20 @@ const updateMessageTemplateCreator =
   const difference = newValue - oldValue;
   if (difference > 0) {
     return (
-      <span style={{ color: color || '' }}>
-        {difference} {difference === 1 ? name.singular : name.plural} added
+      <span>
+        <span role="img" aria-label="Candy icon">🍬 </span>
+        +{difference} {difference === 1
+          ? <span style={{ color: color || '' }}>{name.singular}</span>
+          : <span style={{ color: color || '' }}>{name.plural}</span>} added
       </span>
     );
   } else if (difference < 0) {
     return (
-      <span style={{ color: color || '' }}>
-        {Math.abs(difference)} {Math.abs(difference) === 1 ? name.singular : name.plural} removed
+      <span>
+        <span role="img" aria-label="Candy icon">🍬 </span>
+        -{Math.abs(difference)} {Math.abs(difference) === 1
+          ? <span style={{ color: color || '' }}>{name.singular}</span>
+          :<span style={{ color: color || '' }}>{name.plural}</span>} removed
       </span>
     );
   }
