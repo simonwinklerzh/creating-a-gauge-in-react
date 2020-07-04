@@ -71,8 +71,8 @@ ReactDOM.render(
         componentId="3"
         colspan={3} />
       <InfoBoardRedux
-        title="Candy console"
-        subTitle="Number of candies" />
+        title="Total number of candies"
+        subTitle="Candies change history:" />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
