@@ -15,6 +15,7 @@ export interface iGauge {
   readonly max?: number;
   readonly label?: string;
   readonly units?: string;
+  readonly color?: string;
 }
 
 export const Gauge = ({
