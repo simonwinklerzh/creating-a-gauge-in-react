@@ -1,0 +1,84 @@
+// Path2D for a Heart SVG
+const heartSVG = "M0 200 v-200 h200 a100,100 90 0,1 0,200 a100,100 90 0,1 -200,0 z"
+const SVG_PATH = new Path2D(heartSVG);
+
+// Scaling Constants for Canvas
+const SCALE = 0.1;
+const OFFSET = 0;
+const canvasWidth = 500;
+const canvasHeight = 500;
+
+interface Coordinate {
+  x: number;
+  y: number;
+}
+
+type Coordinates = Coordinate[];
+
+function draw(context: CanvasRenderingContext2D, location: Coordinate) {
+  console.log('attempting to draw');
+  context.fillStyle = 'red';
+  context.shadowColor = 'blue';
+  context.shadowBlur = 15;
+  context.save();
+  context.scale(SCALE, SCALE);
+  context.translate(location.x / SCALE - OFFSET, location.y / SCALE - OFFSET);
+  context.rotate(255 * Math.PI / 180);
+  context.fill(SVG_PATH);
+  // Restore the last recently saved canvas state
+  context.restore();
+}
+
+function useCanvas(): [
+  Coordinates,
+  Function,
+  React.RefObject<HTMLCanvasElement>,
+  number,
+  number
+] {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [coordinates, setCoordinates] = useState<Coordinates>([]);
+
+  useEffect(() => {
+    if (!canvasRef || !canvasRef.current) {
+      return;
+    }
+    const canvasObj: HTMLCanvasElement = canvasRef.current;
+    const context = canvasObj.getContext('2d');
+    if (!context) {
+      return;
+    }
+    // Clear the canvas
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
+    // Draw coordinates from the state
+    coordinates.forEach(coordinate => {draw(context, coordinate)})
+  });
+  return [coordinates, setCoordinates, canvasRef, canvasWidth, canvasHeight];
+}
+
+const CandyCanvas = () => {
+  const [coordinates, setCoordinates, canvasRef, canvasWidth, canvasHeight] = useCanvas();
+  const handleCanvasClick=(event: React.MouseEvent)=>{
+    if (canvasRef && canvasRef.current) {
+      const rect = canvasRef.current.getBoundingClientRect();
+      const x = event.clientX - rect.left; //x position within the element.
+      const y = event.clientY - rect.top;
+      const currentCoord = { x, y };
+      if (typeof setCoordinates !== 'function') {
+        return;
+      };
+      // add the newest mouse location to an array in state
+      setCoordinates([...coordinates, currentCoord]);
+    }
+  };
+  return (
+    <div className="candycanvas">
+      <canvas
+        className="candycanvas__canvas"
+        ref={canvasRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        onClick={handleCanvasClick} />
+    </div>
+  );
+}
