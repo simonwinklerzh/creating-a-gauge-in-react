@@ -29,6 +29,12 @@ export enum CounterActionType {
   DEFAULT
 }
 
+
+/* ==========================================================================
+   Action creators
+   ========================================================================== */
+
+
 export function updateCounter(counter: iCounter): iCountersAction {
   return {
     type: CounterActionType.UPDATE_COUNTER,
@@ -43,6 +49,12 @@ export function removeCounter(counter: iCounter): iCountersAction {
   }
 }
 
+
+/* ==========================================================================
+   Selectors
+   ========================================================================== */
+
+
 export function aggregateCountersSelector(state: iCounterState): number {
   return state.counters.reduce((accumulator, current) => {
     return accumulator + current.value;
@@ -52,6 +64,12 @@ export function aggregateCountersSelector(state: iCounterState): number {
 export function getHistory(state: iCounterState): iCounterState['history'] {
   return state.history;
 }
+
+
+/* ==========================================================================
+   Store
+   ========================================================================== */
+
 
 const countersHistoryLimit = 30;
 
