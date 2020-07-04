@@ -9,6 +9,7 @@ import {
   iCounter,
   CounterUpdateMessageTemplate
 } from '../../store';
+import { SingularPluralString } from '../../index';
 
 export interface iGaugeWithSlider extends iGauge {
   componentId: string;
@@ -17,21 +18,25 @@ export interface iGaugeWithSlider extends iGauge {
   handleCleanUp?: Function;
 }
 
+export interface iGaugeWithSliderRedux extends iGaugeWithSlider {
+  singularPluralLabel: SingularPluralString;
+}
+
 const updateMessageTemplateCreator =
-(name: string, color?: string): CounterUpdateMessageTemplate  =>
+(name: SingularPluralString, color?: string): CounterUpdateMessageTemplate  =>
 (newValue: number, oldValue: number): (JSX.Element | null) => {
   const difference = newValue - oldValue;
   if (difference > 0) {
     return (
-      <p style={{ color: color || '' }}>
-        {difference} {name} added
-      </p>
+      <span style={{ color: color || '' }}>
+        {difference} {difference === 1 ? name.singular : name.plural} added
+      </span>
     );
   } else if (difference < 0) {
     return (
-      <p style={{ color: color || '' }}>
-        {Math.abs(difference)} {name} removed
-      </p>
+      <span style={{ color: color || '' }}>
+        {Math.abs(difference)} {Math.abs(difference) === 1 ? name.singular : name.plural} removed
+      </span>
     );
   }
   return null;
@@ -50,9 +55,6 @@ export const GaugeWithSlider = ({
   handleCleanUp,
 }: iGaugeWithSlider = { componentId: '' }) => {
   const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
-  const updateMessageTemplate = color
-    ? updateMessageTemplateCreator(label, color)
-    : updateMessageTemplateCreator(label);
 
   /**
    * Execute the change handler when the state value
@@ -62,11 +64,10 @@ export const GaugeWithSlider = ({
     if (handleChange) {
       handleChange({
         id: componentId,
-        value: valueState,
-        updateMessageTemplate
+        value: valueState
       });
     }
-  }, [valueState, componentId, handleChange, updateMessageTemplate]);
+  }, [valueState, componentId, handleChange]);
 
   /**
    * Execute cleanup function when the id of the
@@ -113,13 +114,20 @@ export const GaugeWithSlider = ({
   );
 };
 
-export const GaugeWithSliderRedux = (props: iGaugeWithSlider) => {
+export const GaugeWithSliderRedux = (props: iGaugeWithSliderRedux) => {
   const dispatch = useDispatch();
+  const updateMessageTemplate = props.color
+    ? updateMessageTemplateCreator(props.singularPluralLabel, props.color)
+    : updateMessageTemplateCreator(props.singularPluralLabel);
+
   return (
     <GaugeWithSlider
       handleChange={(value: iCounter) => {
         // Update / add counter data into the store
-        dispatch(updateCounter(value))}
+        dispatch(updateCounter({
+          ...value,
+          updateMessageTemplate
+        }))}
       }
       handleCleanUp={(value: iCounter) => {
         // Remove counter data from the store

@@ -1,7 +1,53 @@
 .infoboard {
   grid-column-start: span 9;
+  padding: 3em;
+  background-color: #f8f9fa;
+  grid-column-start: span 3;
+}
+
+.infoboard__title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #8b8ba7;
+}
+
+.infoboard__subtitle {
+  margin: 0;
+  text-align: center;
+  font-weight: 300;
+  font-size: inherit;
+  color: #8b8ba7;
+  margin-bottom: 1em;
 }
 
 .infoboard__value {
   font-size: 2em;
+  margin: 0;
+  text-align: center;
+  font-weight: 900;
+}
+
+.infoboard__log {
+  margin: 0;
+  padding: 0;
+  background-color: #120e2d;
+  overflow: auto;
+}
+
+.infoboard__log-entry {
+  list-style-type: none;
+  line-height: 1.3em;
+  margin: 0 0.4em;
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+.infoboard__log-entry:first-child {
+  padding-top: 0.5em;
+}
+
+.infoboard__log-entry:last-child {
+  padding-bottom: 0.5em;
 }

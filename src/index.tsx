@@ -7,23 +7,37 @@ import { store } from './store';
 import 'rc-slider/assets/index.css';
 import './index.css';
 
+export interface SingularPluralString {
+  singular: string;
+  plural: string;
+}
+
 export interface Candy {
-  name: string;
+  name: SingularPluralString;
   color: string;
 }
 
 const blueBubbleGums : Candy = {
-  name: 'Blue bubble gums',
+  name: {
+    singular: 'Blue bubble gum',
+    plural: 'Blue bubble gums'
+  },
   color: '#5555ff'
 }
 
 const greenBubbleGums : Candy = {
-  name: 'Green bubble gums',
+  name: {
+    singular: 'Green bubble gum',
+    plural: 'Green bubble gums'
+  },
   color: '#55ff55'
 }
 
 const redCandies : Candy = {
-  name: 'Red candies',
+  name: {
+    singular: 'Red candy',
+    plural: 'Red candies'
+  },
   color: '#ff3333'
 }
 
@@ -34,26 +48,31 @@ ReactDOM.render(
       <GaugeWithSliderRedux
         value={0}
         max={2000}
-        label={blueBubbleGums.name}
+        label={blueBubbleGums.name.singular}
+        singularPluralLabel={blueBubbleGums.name}
         color={blueBubbleGums.color}
         units="Quantity"
         componentId="1"
         colspan={3} />
       <GaugeWithSliderRedux
         value={40}
-        label={greenBubbleGums.name}
+        label={greenBubbleGums.name.singular}
+        singularPluralLabel={greenBubbleGums.name}
         color={greenBubbleGums.color}
         units="Quantity"
         componentId="2"
         colspan={3} />
       <GaugeWithSliderRedux
-        label={redCandies.name}
+        label={redCandies.name.singular}
+        singularPluralLabel={redCandies.name}
         color={redCandies.color}
         value={70}
         units="Quantity"
         componentId="3"
         colspan={3} />
-      <InfoBoardRedux />
+      <InfoBoardRedux
+        title="Candy console"
+        subTitle="Number of candies" />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
