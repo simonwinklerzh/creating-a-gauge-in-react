@@ -44,7 +44,12 @@ const redCandies : Candy = {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <h1 className="title">Bubble gums control center</h1>
+      <h1 className="title">
+        <span
+          role="img"
+          aria-label="Candy icon"
+          className="title__icon">🍬&nbsp;</span>
+        Candy control center</h1>
       <GaugeWithSliderRedux
         value={0}
         max={2000}
