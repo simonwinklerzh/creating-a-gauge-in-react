@@ -141,4 +141,15 @@ function counters(
   }
 }
 
-export const store = createStore(counters);
+// For redux dev tools
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION__: Function
+  }
+}
+
+export const store = createStore(
+  counters,
+  // For redux dev tools
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
