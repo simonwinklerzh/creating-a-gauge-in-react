@@ -2,8 +2,8 @@ import { createStore } from 'redux';
 
 export type CounterId = string;
 
-export interface CounterUpdateMessageTemplate {
-  (previousValue: number, newValue: number): (JSX.Element | null);
+export interface iCounterUpdateMessageTemplate {
+  (newValue: number, oldValue: number): (JSX.Element | string | undefined | null);
 }
 
 export interface iCounter {

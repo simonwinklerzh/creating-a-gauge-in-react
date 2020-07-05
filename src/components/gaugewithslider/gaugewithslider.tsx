@@ -7,24 +7,24 @@ import {
   removeCounter,
   updateCounter,
   iCounter,
-  CounterUpdateMessageTemplate
+  iCounterUpdateMessageTemplate
 } from '../../store';
 import { SingularPluralString } from '../../candies';
 
 export interface iGaugeWithSlider extends iGauge {
-  componentId: string;
   colspan?: number;
-  handleChange?: Function;
-  handleCleanUp?: Function;
+  value: number;
+  setValue?: (value: number) => void;
 }
 
 export interface iGaugeWithSliderRedux extends iGaugeWithSlider {
+  componentId: string;
   singularPluralLabel: SingularPluralString;
 }
 
 const updateMessageTemplateCreator =
-(name: SingularPluralString, color?: string): CounterUpdateMessageTemplate  =>
-(newValue: number, oldValue: number): (JSX.Element | null) => {
+(name: SingularPluralString, color?: string): iCounterUpdateMessageTemplate  =>
+(newValue: number, oldValue: number) => {
   const difference = newValue - oldValue;
   if (difference > 0) {
     return (
@@ -50,49 +50,14 @@ const updateMessageTemplateCreator =
 
 export const GaugeWithSlider = ({
   value = 60,
+  setValue = (n: number) => {},
   min = 0,
   max = 200,
   label = "Speed",
   color,
   units = "kilometers per hour",
-  componentId = '', // Provide a component ID if you want to persist the state to local storage
-  colspan = 1,
-  handleChange,
-  handleCleanUp,
-}: iGaugeWithSlider = { componentId: '' }) => {
-  const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${componentId}`, value);
-
-  /**
-   * Execute the change handler when the state value
-   * changes or when the id of the component changes.
-   */
-  useEffect(() => {
-    if (handleChange) {
-      handleChange({
-        id: componentId,
-        value: valueState
-      });
-    }
-  }, [valueState, componentId, handleChange]);
-
-  /**
-   * Execute cleanup function when the id of the
-   * component changes or when the component will unmount.
-   */
-  useEffect(() => {
-    return () => {
-      if (handleCleanUp) {
-        handleCleanUp({
-          id: componentId
-        })
-      }
-    }
-  }, [componentId, handleCleanUp]);
-
-  if (!componentId) {
-    console.error('You must provide a (unique persistent) id for this component to work properly');
-    return null;
-  }
+  colspan = 1
+}: iGaugeWithSlider) => {
 
   return (
     <div
@@ -101,7 +66,7 @@ export const GaugeWithSlider = ({
         gridColumnStart: `span ${colspan}`
       }}>
       <Gauge {...{
-        value: valueState,
+        value,
         min,
         max,
         label,
@@ -109,11 +74,11 @@ export const GaugeWithSlider = ({
       }} />
       <div className="gaugewithslider__slider">
         <Slider {...{
-          value: valueState,
+          value,
           min,
           max,
           marks: {[min]: String(min), [max]: String(max)},
-          onChange: setValuestate
+          onChange: setValue
         }} />
       </div>
     </div>
@@ -122,23 +87,40 @@ export const GaugeWithSlider = ({
 
 export const GaugeWithSliderRedux = (props: iGaugeWithSliderRedux) => {
   const dispatch = useDispatch();
+  const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${props.componentId}`, props.value);
   const updateMessageTemplate = props.color
     ? updateMessageTemplateCreator(props.singularPluralLabel, props.color)
     : updateMessageTemplateCreator(props.singularPluralLabel);
 
+  /**
+   * Connect values from <GaugeWithSlider /> with the store
+   */
+  useEffect(() => {
+    dispatch(updateCounter({
+      id: props.componentId,
+      value: valueState,
+      updateMessageTemplate
+    }));
+  }, [valueState, props.componentId, dispatch, updateMessageTemplate]);
+
+
+  /**
+   * Disconnect <GaugeWithSlider /> from the store
+   */
+  useEffect(() => {
+    return () => {
+      dispatch(removeCounter({
+        id: props.componentId,
+        value: 0,
+        updateMessageTemplate: () => {}
+      }))
+    };
+  }, [props.componentId, dispatch]);
+
   return (
     <GaugeWithSlider
-      handleChange={(value: iCounter) => {
-        // Update / add counter data into the store
-        dispatch(updateCounter({
-          ...value,
-          updateMessageTemplate
-        }))}
-      }
-      handleCleanUp={(value: iCounter) => {
-        // Remove counter data from the store
-        dispatch(removeCounter(value))}
-      }
-      {...props} />
+      {...props}
+      value={valueState}
+      setValue={setValuestate} />
   );
 }
