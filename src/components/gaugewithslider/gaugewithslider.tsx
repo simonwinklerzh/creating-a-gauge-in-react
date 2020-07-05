@@ -9,7 +9,7 @@ import {
   iCounter,
   CounterUpdateMessageTemplate
 } from '../../store';
-import { SingularPluralString } from '../../index';
+import { SingularPluralString } from '../../candies';
 
 export interface iGaugeWithSlider extends iGauge {
   componentId: string;

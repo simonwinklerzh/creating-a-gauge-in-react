@@ -1,6 +1,7 @@
 @import './components/gauge/gauge.css';
 @import './components/gaugewithslider/gaugewithslider.css';
 @import './components/infoboard/infoboard.css';
+@import './components/candycanvas/candycanvas.css';
 
 body {
   margin: 3vw;

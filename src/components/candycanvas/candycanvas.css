@@ -1,0 +1,9 @@
+.candycanvas {
+  grid-column-start: span 6;
+  position: relative;
+}
+
+.candycanvas canvas {
+  position: absolute;
+  width: 100%;
+}

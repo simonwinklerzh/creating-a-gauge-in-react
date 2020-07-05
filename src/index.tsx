@@ -3,43 +3,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { GaugeWithSliderRedux } from './components/gaugewithslider/gaugewithslider';
 import { InfoBoardRedux } from './components/infoboard/infoboard';
+import { CandyCanvas } from './components/candycanvas/candycanvas';
 import { store } from './store';
+import { blueBubbleGums, greenBubbleGums, redCandies } from './candies';
 import 'rc-slider/assets/index.css';
 import './index.css';
-
-export interface SingularPluralString {
-  singular: string;
-  plural: string;
-}
-
-export interface Candy {
-  name: SingularPluralString;
-  color: string;
-}
-
-const blueBubbleGums : Candy = {
-  name: {
-    singular: 'Blue bubble gum',
-    plural: 'Blue bubble gums'
-  },
-  color: '#5555ff'
-}
-
-const greenBubbleGums : Candy = {
-  name: {
-    singular: 'Green bubble gum',
-    plural: 'Green bubble gums'
-  },
-  color: '#55ff55'
-}
-
-const redCandies : Candy = {
-  name: {
-    singular: 'Red candy',
-    plural: 'Red candies'
-  },
-  color: '#ff3333'
-}
 
 ReactDOM.render(
   <React.StrictMode>
@@ -52,7 +20,7 @@ ReactDOM.render(
         Candy control center</h1>
       <GaugeWithSliderRedux
         value={0}
-        max={2000}
+        max={100}
         label={blueBubbleGums.name.singular}
         singularPluralLabel={blueBubbleGums.name}
         color={blueBubbleGums.color}
@@ -78,6 +46,7 @@ ReactDOM.render(
       <InfoBoardRedux
         title="Total number of candies"
         subTitle="Candies change history:" />
+      <CandyCanvas />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
