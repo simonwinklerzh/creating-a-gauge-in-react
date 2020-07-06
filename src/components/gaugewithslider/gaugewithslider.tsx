@@ -13,11 +13,11 @@ export interface iGaugeWithSlider extends iGauge {
   colspan?: number;
   value: number;
   setValue?: (value: number) => void;
-  candyCounter: CandyCounter;
 }
 
 export interface iGaugeWithSliderRedux extends iGaugeWithSlider {
   componentId: string;
+  candyCounter: CandyCounter;
 }
 
 export const GaugeWithSlider = ({
@@ -88,6 +88,7 @@ export const GaugeWithSliderRedux = (props: iGaugeWithSliderRedux) => {
   return (
     <GaugeWithSlider
       {...props}
+      label={props.candyCounter.name.plural}
       value={valueState}
       setValue={setValuestate} />
   );
