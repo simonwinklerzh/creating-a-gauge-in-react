@@ -3,11 +3,36 @@ import { useSelector } from 'react-redux';
 import Matter from 'matter-js';
 import { CandyCounter } from '../../candies';
 import { store, getDifference, getCounterById } from '../../store';
+import { randomIntFromInterval } from '../../utility';
+
+/* ==========================================================================
+   Settings
+   ========================================================================== */
 
 const canvas_width: number = 800;
 const canvas_height: number = 600;
 const candy_diameter: number = (canvas_width / 100) / 2;
 const default_circle_color = '#ffffff';
+/**
+ * Add a padding to make sure that candies are not created on the very
+ * left or right hand border of the canvas.
+ */
+const canvas_padding: number = 10;
+
+/* ==========================================================================
+   Helper functions
+   ========================================================================== */
+
+const getRandomCandyStartPosition = (canvas_width: number) : number => {
+  return randomIntFromInterval(
+    Math.round(candy_diameter) + canvas_padding,
+    canvas_width - (2 * Math.round(candy_diameter)) - (2 * canvas_padding)
+  );
+}
+
+/* ==========================================================================
+   Prepare initialization
+   ========================================================================== */
 
 // module aliases
 const Engine = Matter.Engine,
@@ -68,7 +93,7 @@ export const CandyCanvas = () => {
     if (difference > 0) {
       for (let i = 0; i < difference; i += 1) {
         const circle = Bodies.circle(
-          canvas_width / 2,
+          getRandomCandyStartPosition(canvas_width),
           canvas_height / 10,
           candy_diameter,
           {
