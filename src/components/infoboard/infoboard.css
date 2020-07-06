@@ -1,8 +1,7 @@
 .infoboard {
-  grid-column-start: span 9;
   padding: 3em;
   background-color: #f8f9fa;
-  grid-column-start: span 3;
+  grid-column-start: span 4;
 }
 
 .infoboard__title {
