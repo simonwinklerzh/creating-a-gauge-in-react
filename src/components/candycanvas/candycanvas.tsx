@@ -1,28 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Matter from 'matter-js';
-import { blueBubbleGums, greenBubbleGums, redCandies } from '../../candies';
-import { getDifference } from '../../store';
+import { CandyCounter } from '../../candies';
+import { store, getDifference, getCounterById } from '../../store';
 
 const canvas_width: number = 800;
 const canvas_height: number = 600;
 const candy_diameter: number = (canvas_width / 100) / 2;
-
-const circleRenderOptions: Matter.IBodyRenderOptions = {
-  fillStyle: 'red'
-}
-
-const blueBubbleGumRenderOptions: Matter.IBodyRenderOptions = {
-  fillStyle: blueBubbleGums.color
-}
-
-const greenBubbleGumRenderOptions: Matter.IBodyRenderOptions = {
-  fillStyle: greenBubbleGums.color
-}
-
-const redCandyRenderOptions: Matter.IBodyRenderOptions = {
-  fillStyle: redCandies.color
-}
+const default_circle_color = '#ffffff';
 
 // module aliases
 const Engine = Matter.Engine,
@@ -32,16 +17,6 @@ const Engine = Matter.Engine,
 
 // create an engine
 const engine = Engine.create();
-
-const circleA = Bodies.circle(100, 100, 5, {
-  render: blueBubbleGumRenderOptions
-});
-const circleB = Bodies.circle(400, 100, 5, {
-  render: greenBubbleGumRenderOptions
-});
-const circleC = Bodies.circle(700, 100, 5, {
-  render: redCandyRenderOptions
-});
 
 const ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 
@@ -83,7 +58,13 @@ export const CandyCanvas = () => {
    * in the store change.
    */
   useEffect(() => {
-    let difference = difference_container[0];
+    const difference = difference_container.difference;
+    const state = store.getState();
+    const counter = getCounterById(state, difference_container.counterId) as CandyCounter;
+    const color = counter
+      ? counter.color
+      : default_circle_color;
+
     if (difference > 0) {
       for (let i = 0; i < difference; i += 1) {
         const circle = Bodies.circle(
@@ -91,14 +72,16 @@ export const CandyCanvas = () => {
           canvas_height / 10,
           candy_diameter,
           {
-            render: blueBubbleGumRenderOptions
+            render: {
+              fillStyle: color
+            }
           }
         );
         World.add(engine.world, [circle]);
         circles.push(circle);
       }
     } else if (difference < 0) {
-      let circlesToRemove = circles
+      circles
         .splice(0, Math.abs(difference))
         .forEach(circle => {
           World.remove(engine.world, circle);

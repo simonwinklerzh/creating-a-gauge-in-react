@@ -15,7 +15,10 @@ export interface iCounter {
 export interface iCounterState {
   counters: iCounter[];
   history: string[];
-  difference_container: [ number ];
+  difference_container: {
+    difference: number;
+    counterId: string;
+  };
 }
 
 export interface iCountersAction {
@@ -55,6 +58,13 @@ export function removeCounter(counter: iCounter): iCountersAction {
    Selectors
    ========================================================================== */
 
+export function getCounters(state: iCounterState): iCounter[] {
+  return state.counters;
+}
+
+export function getCounterById(state: iCounterState, id: string) {
+  return getCounters(state).find(counter => counter.id === id);
+}
 
 export function aggregateCountersSelector(state: iCounterState): number {
   return state.counters.reduce((accumulator, current) => {
@@ -82,7 +92,10 @@ function counters(
   state: iCounterState = {
     counters: [],
     history: [],
-    difference_container: [ 0 ]
+    difference_container: {
+      difference: 0,
+      counterId: ''
+    }
   },
   action: iCountersAction
 ) : iCounterState {
@@ -124,7 +137,10 @@ function counters(
            * difference: -1
            * difference: -1
            */
-          difference_container: [newCounter.value - existingCounter.value]
+          difference_container: {
+            difference: newCounter.value - existingCounter.value,
+            counterId: action.payload.id
+          }
 
         }
         /**
