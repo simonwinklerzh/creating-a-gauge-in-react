@@ -47,7 +47,7 @@ const ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
 
 World.add(engine.world, [ground]);
 
-const circles: Matter.Body[] = [];
+let circles: Matter.Body[] = [];
 
 export const CandyCanvas = () => {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
@@ -106,11 +106,28 @@ export const CandyCanvas = () => {
         circles.push(circle);
       }
     } else if (difference < 0) {
-      circles
-        .splice(0, Math.abs(difference))
-        .forEach(circle => {
-          World.remove(engine.world, circle);
-        });
+      interface Accumulator {
+        circlesToRemove: Matter.Body[];
+        newCircles: Matter.Body[];
+      }
+      const { circlesToRemove, newCircles } =
+      circles.reduce((accumulator: Accumulator, current: Matter.Body): Accumulator => {
+        if (current.render.fillStyle === color && accumulator.circlesToRemove.length < Math.abs(difference)) {
+          return {
+            ...accumulator,
+            circlesToRemove: [...accumulator.circlesToRemove, current]
+          }
+        }
+        return {
+          ...accumulator,
+          newCircles: [...accumulator.newCircles, current]
+        };
+      }, {
+        circlesToRemove: [],
+        newCircles: []
+      });
+      circlesToRemove.forEach(circle => World.remove(engine.world, circle));
+      circles = newCircles;
     }
   }, [difference_container]);
 
