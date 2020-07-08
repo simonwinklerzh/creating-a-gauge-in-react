@@ -27,12 +27,14 @@ ReactDOM.render(
         candyCounter={blueBubbleGumsCounter} />
       <GaugeWithSliderRedux
         value={40}
+        max={50}
         units="Quantity"
         componentId="2"
         colspan={3}
         candyCounter={greenBubbleGumsCounter} />
       <GaugeWithSliderRedux
-        value={70}
+        value={25}
+        max={50}
         units="Quantity"
         componentId="3"
         colspan={3}
