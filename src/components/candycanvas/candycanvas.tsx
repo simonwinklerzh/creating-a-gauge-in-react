@@ -11,7 +11,7 @@ import { randomIntFromInterval } from '../../utility';
 
 const canvas_width: number = 800;
 const canvas_height: number = 600;
-const candy_diameter: number = (canvas_width / 100) / 2;
+const candy_diameter: number = (canvas_width / 50) / 2;
 const default_circle_color = '#ffffff';
 /**
  * Add a padding to make sure that candies are not created on the very
