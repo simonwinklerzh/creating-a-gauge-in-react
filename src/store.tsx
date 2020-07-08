@@ -144,8 +144,6 @@ function counters(
                 oldValue: existingCounter.value,
                 counterId: newCounter.id
               },
-              // [newCounter.value, existingCounter.value, newCounter.id],
-              // newCounter.updateMessageTemplate(newCounter.value, existingCounter.value),
               ...state.history
             ].slice(0, countersHistoryLimit - 1)
             : state.history,
