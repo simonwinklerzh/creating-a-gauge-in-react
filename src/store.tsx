@@ -1,4 +1,35 @@
 import { createStore } from 'redux';
+import { throttle } from 'lodash';
+
+/* ==========================================================================
+   Local storage helpers
+   ========================================================================== */
+
+export const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem('state');
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
+
+export const saveState = (state: iCounterState) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('state', serializedState);
+  } catch {
+    // ignore write errors
+  }
+};
+
+/* ==========================================================================
+   Types
+   ========================================================================== */
 
 export type CounterId = string;
 
@@ -137,16 +168,14 @@ function counters(
               ? { ...counter, value: action.payload.value }
               : counter;
           }),
-          history: newCounter.updateMessageTemplate
-            ? [
-              {
-                newValue: newCounter.value,
-                oldValue: existingCounter.value,
-                counterId: newCounter.id
-              },
-              ...state.history
-            ].slice(0, countersHistoryLimit - 1)
-            : state.history,
+          history: [
+            {
+              newValue: newCounter.value,
+              oldValue: existingCounter.value,
+              counterId: newCounter.id
+            },
+            ...state.history
+          ].slice(0, countersHistoryLimit - 1),
           /**
            * Store the difference between the previous value and the new value.
            * So we know, how many candies have been added / removed. (e.g. -2 or 1)
@@ -181,6 +210,8 @@ function counters(
   }
 }
 
+const persistedStore = loadState();
+
 // For redux dev tools
 declare global {
   interface Window {
@@ -190,6 +221,11 @@ declare global {
 
 export const store = createStore(
   counters,
+  persistedStore,
   // For redux dev tools
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+store.subscribe(throttle(() => {
+  saveState(store.getState());
+}, 1000))

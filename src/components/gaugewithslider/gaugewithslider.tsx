@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Slider from 'rc-slider';
 import { Gauge, iGauge } from '../gauge/gauge';
-import { useLocalStorage } from '../../hooks';
 import {
-  removeCounter,
-  updateCounter
+  updateCounter,
+  getCounterById,
+  iCounter,
+  iCounterState
 } from '../../store';
 import { CandyCounter } from '../../candies';
 
@@ -30,7 +31,6 @@ export const GaugeWithSlider = ({
   units = "kilometers per hour",
   colspan = 1
 }: iGaugeWithSlider) => {
-
   return (
     <div
       className="gaugewithslider"
@@ -59,37 +59,22 @@ export const GaugeWithSlider = ({
 
 export const GaugeWithSliderRedux = (props: iGaugeWithSliderRedux) => {
   const dispatch = useDispatch();
-  const [ valueState, setValuestate ] = useLocalStorage(`gauge_control_center_state_${props.componentId}`, props.value);
-
-  /**
-   * Connect values from <GaugeWithSlider /> with the store
-   */
-  useEffect(() => {
-    dispatch(updateCounter({
-      ...props.candyCounter,
-      value: valueState
-    }));
-  }, [valueState, props.componentId, props.candyCounter, dispatch]);
-
-
-  /**
-   * Disconnect <GaugeWithSlider /> from the store
-   */
-  useEffect(() => {
-    return () => {
-      dispatch(removeCounter({
-        id: props.componentId,
-        value: 0,
-        updateMessageTemplate: () => {}
-      }));
-    };
-  }, [props.componentId, dispatch]);
-
+  const counter = useSelector<iCounterState, (iCounter | undefined)>((state) => getCounterById(state, props.candyCounter.id));
+  const value = counter
+    ? counter.value
+    : props.value;
   return (
     <GaugeWithSlider
       {...props}
       label={props.candyCounter.name.plural}
-      value={valueState}
-      setValue={setValuestate} />
+      value={value}
+      setValue={(value: number) => {
+        if (counter) {
+          dispatch(updateCounter({
+            ...counter,
+            value
+          }));
+        }
+      }} />
   );
 }

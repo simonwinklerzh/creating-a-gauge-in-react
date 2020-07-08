@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLocalStorage } from '../../hooks';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { candyCounters, getCandyCountersById } from '../../candies';
-import { aggregateCountersSelector, getHistory, addHistory, HistoryEntry } from '../../store';
+import { aggregateCountersSelector, getHistory, HistoryEntry } from '../../store';
 
 export interface iInfoBoard {
   title: string;
@@ -46,17 +45,6 @@ export const InfoBoardRedux = (props: {
 }) => {
   const value = useSelector(aggregateCountersSelector);
   const history = useSelector(getHistory);
-  const dispatch = useDispatch();
-  const [ valueState, setValueState ] = useLocalStorage('infoboard_state', []);
-
-  useEffect(() => {
-    if (history.length) {
-      setValueState(history);
-    } else if (valueState.length) {
-      dispatch(addHistory(valueState));
-    }
-  }, [history, valueState, setValueState, dispatch]);
-
   return (
     <InfoBoard
       {...props}
