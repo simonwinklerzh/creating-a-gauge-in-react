@@ -70,3 +70,50 @@ export const redCandies : Candy = {
   },
   color: '#ff3333'
 }
+
+
+export const blueBubbleGumsCounter = candyCounterCreator({
+  name: {
+    singular: 'Blue bubble gum',
+    plural: 'Blue bubble gums'
+  },
+  color: '#5555ff'
+}, {
+  id: "1",
+  value: 0,
+  updateMessageTemplate: () => {}
+});
+
+export const greenBubbleGumsCounter = candyCounterCreator({
+  name: {
+    singular: 'Green bubble gum',
+    plural: 'Green bubble gums'
+  },
+  color: '#55ff55'
+}, {
+  id: "2",
+  value: 0,
+  updateMessageTemplate: () => {}
+});
+
+export const redCandiesCounter = candyCounterCreator({
+  name: {
+    singular: 'Red candy',
+    plural: 'Red candies'
+  },
+  color: '#ff3333'
+}, {
+  id: "3",
+  value: 0,
+  updateMessageTemplate: () => {}
+});
+
+export const candyCounters = [
+  blueBubbleGumsCounter,
+  greenBubbleGumsCounter,
+  redCandiesCounter
+];
+
+export function getCandyCountersById(id: string, candyCounters: CandyCounter[]): (CandyCounter | undefined) {
+  return candyCounters.find(counter => counter.id === id);
+}

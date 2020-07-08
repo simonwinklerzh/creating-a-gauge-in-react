@@ -5,46 +5,9 @@ import { GaugeWithSliderRedux } from './components/gaugewithslider/gaugewithslid
 import { InfoBoardRedux } from './components/infoboard/infoboard';
 import { CandyCanvas } from './components/candycanvas/candycanvas';
 import { store } from './store';
-import { candyCounterCreator } from './candies';
+import { blueBubbleGumsCounter, greenBubbleGumsCounter, redCandiesCounter } from './candies';
 import 'rc-slider/assets/index.css';
 import './index.css';
-
-
-const blueBubbleGumsCounter = candyCounterCreator({
-  name: {
-    singular: 'Blue bubble gum',
-    plural: 'Blue bubble gums'
-  },
-  color: '#5555ff'
-}, {
-  id: "1",
-  value: 0,
-  updateMessageTemplate: () => {}
-});
-
-const greenBubbleGumsCounter = candyCounterCreator({
-  name: {
-    singular: 'Green bubble gum',
-    plural: 'Green bubble gums'
-  },
-  color: '#55ff55'
-}, {
-  id: "2",
-  value: 0,
-  updateMessageTemplate: () => {}
-});
-
-const redCandiesCounter = candyCounterCreator({
-  name: {
-    singular: 'Red candy',
-    plural: 'Red candies'
-  },
-  color: '#ff3333'
-}, {
-  id: "3",
-  value: 0,
-  updateMessageTemplate: () => {}
-});
 
 ReactDOM.render(
   <React.StrictMode>

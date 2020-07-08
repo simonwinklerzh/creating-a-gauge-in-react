@@ -1,12 +1,14 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { aggregateCountersSelector, getHistory } from '../../store';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocalStorage } from '../../hooks';
+import { candyCounters, CandyCounter, getCandyCountersById } from '../../candies';
+import { aggregateCountersSelector, getHistory, addHistory, HistoryEntry } from '../../store';
 
 export interface iInfoBoard {
   title: string;
   subTitle: string;
   value: number;
-  history: string[];
+  history: HistoryEntry[];
 }
 
 export const InfoBoard = ({
@@ -23,7 +25,15 @@ export const InfoBoard = ({
       <ul className="infoboard__log">
         {
           history.map((entry, index) => {
-            return (<li className="infoboard__log-entry" key={index}>{entry}</li>);
+            const candyCounter = getCandyCountersById(entry.counterId, candyCounters);
+            if (candyCounter && candyCounter.updateMessageTemplate) {
+              return (
+                <li className="infoboard__log-entry" key={index}>
+                  {candyCounter.updateMessageTemplate(entry.newValue, entry.oldValue)}
+                </li>
+              );
+            }
+            return null;
           })
         }
       </ul>
@@ -36,6 +46,17 @@ export const InfoBoardRedux = (props: {
 }) => {
   const value = useSelector(aggregateCountersSelector);
   const history = useSelector(getHistory);
+  const dispatch = useDispatch();
+  const [ valueState, setValueState ] = useLocalStorage('infoboard_state', []);
+
+  useEffect(() => {
+    if (history.length) {
+      setValueState(history);
+    } else if (valueState.length) {
+      dispatch(addHistory(valueState));
+    }
+  }, [history, valueState]);
+
   return (
     <InfoBoard
       {...props}

@@ -12,9 +12,15 @@ export interface iCounter {
   updateMessageTemplate: Function;
 }
 
+export interface HistoryEntry {
+  oldValue: number;
+  newValue: number;
+  counterId: string;
+}
+
 export interface iCounterState {
   counters: iCounter[];
-  history: string[];
+  history: HistoryEntry[];
   difference_container: {
     difference: number;
     counterId: string;
@@ -26,12 +32,24 @@ export interface iCountersAction {
   payload: iCounter;
 }
 
-export enum CounterActionType {
-  ADD_COUNTER,
-  UPDATE_COUNTER,
-  REMOVE_COUNTER,
-  DEFAULT
+export interface iCountersActionAddHistory {
+  type: CounterActionType.ADD_HISTORY;
+  payload: iCounterState['history'];
 }
+
+export enum CounterActionType {
+  ADD_COUNTER = 'ADD_COUNTER',
+  UPDATE_COUNTER = 'UPDATE_COUNTER',
+  REMOVE_COUNTER = 'REMOVE_COUNTER',
+  ADD_HISTORY = 'ADD_HISTORY',
+}
+
+type SFA<T, P> = { type: T, payload: P };
+
+const createAction = <T extends CounterActionType, P>(
+  type: T,
+  payload: P
+) : SFA<T, P> => ({ type, payload });
 
 
 /* ==========================================================================
@@ -39,19 +57,17 @@ export enum CounterActionType {
    ========================================================================== */
 
 
-export function updateCounter(counter: iCounter): iCountersAction {
-  return {
-    type: CounterActionType.UPDATE_COUNTER,
-    payload: counter
-  }
-}
+export const updateCounter = (payload: iCounter) =>
+  createAction(CounterActionType.UPDATE_COUNTER, payload);
 
-export function removeCounter(counter: iCounter): iCountersAction {
-  return {
-    type: CounterActionType.REMOVE_COUNTER,
-    payload: counter
-  }
-}
+export const removeCounter = (payload: iCounter) =>
+  createAction(CounterActionType.REMOVE_COUNTER, payload);
+
+export const addHistory = (payload: iCounterState['history']) =>
+  createAction(CounterActionType.ADD_HISTORY, payload);
+
+const actions = { updateCounter, removeCounter, addHistory };
+type Action = ReturnType<typeof actions[keyof typeof actions]>;
 
 
 /* ==========================================================================
@@ -97,7 +113,7 @@ function counters(
       counterId: ''
     }
   },
-  action: iCountersAction
+  action: Action
 ) : iCounterState {
   switch (action.type) {
     case CounterActionType.REMOVE_COUNTER:
@@ -123,7 +139,13 @@ function counters(
           }),
           history: newCounter.updateMessageTemplate
             ? [
-              newCounter.updateMessageTemplate(newCounter.value, existingCounter.value),
+              {
+                newValue: newCounter.value,
+                oldValue: existingCounter.value,
+                counterId: newCounter.id
+              },
+              // [newCounter.value, existingCounter.value, newCounter.id],
+              // newCounter.updateMessageTemplate(newCounter.value, existingCounter.value),
               ...state.history
             ].slice(0, countersHistoryLimit - 1)
             : state.history,
@@ -151,7 +173,11 @@ function counters(
           ...state,
           counters: [...state.counters, newCounter]
         };
-      // return state;
+    case CounterActionType.ADD_HISTORY:
+      return {
+        ...state,
+        history: action.payload
+      }
     default:
       return state;
   }
