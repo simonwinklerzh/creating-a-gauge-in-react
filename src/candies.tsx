@@ -47,31 +47,6 @@ export const candyCounterCreator = (candy: Candy, counter: iCounter): CandyCount
   }
 }
 
-export const blueBubbleGums : Candy = {
-  name: {
-    singular: 'Blue bubble gum',
-    plural: 'Blue bubble gums'
-  },
-  color: '#5555ff'
-}
-
-export const greenBubbleGums : Candy = {
-  name: {
-    singular: 'Green bubble gum',
-    plural: 'Green bubble gums'
-  },
-  color: '#55ff55'
-}
-
-export const redCandies : Candy = {
-  name: {
-    singular: 'Red candy',
-    plural: 'Red candies'
-  },
-  color: '#ff3333'
-}
-
-
 export const blueBubbleGumsCounter = candyCounterCreator({
   name: {
     singular: 'Blue bubble gum',
