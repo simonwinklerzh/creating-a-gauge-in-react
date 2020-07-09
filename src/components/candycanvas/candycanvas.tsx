@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Matter from 'matter-js';
-import { CandyCounter } from '../../candies';
-import { store, getDifference, getCounterById } from '../../store';
+import { candyCounters, getCandyCountersById } from '../../candies';
+import { getDifference, getCounters, iCounter } from '../../store';
 import { randomIntFromInterval } from '../../utility';
 
 /* ==========================================================================
@@ -11,7 +11,7 @@ import { randomIntFromInterval } from '../../utility';
 
 const canvas_width: number = 800;
 const canvas_height: number = 600;
-const candy_diameter: number = (canvas_width / 50) / 2;
+const candy_diameter: number = (canvas_width / 40) / 2;
 const default_circle_color = '#ffffff';
 /**
  * Add a padding to make sure that candies are not created on the very
@@ -28,6 +28,34 @@ const getRandomCandyStartPosition = (canvas_width: number) : number => {
     Math.round(candy_diameter) + canvas_padding,
     canvas_width - (2 * Math.round(candy_diameter)) - (2 * canvas_padding)
   );
+}
+
+const createCircle = (color: string): Matter.Body => {
+  return Bodies.circle(
+    getRandomCandyStartPosition(canvas_width),
+    canvas_height / 10,
+    candy_diameter,
+    {
+      render: {
+        fillStyle: color
+      }
+    }
+  );
+}
+
+function addCirclesSequentially(amount: number, counter: iCounter) {
+  if (amount > 0) {
+    const candyCounter = getCandyCountersById(counter.id, candyCounters);
+    const color = candyCounter
+      ? candyCounter.color
+      : default_circle_color;
+    const circle = createCircle(color);
+    World.add(engine.world, [circle]);
+    circles.push(circle);
+  }
+  window.setTimeout(() => {
+    addCirclesSequentially(amount - 1, counter);
+  }, 10);
 }
 
 /* ==========================================================================
@@ -52,6 +80,7 @@ let circles: Matter.Body[] = [];
 export const CandyCanvas = () => {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const difference_container = useSelector(getDifference);
+  const counters = useSelector(getCounters);
 
   /**
    * Create and render our canvas when the component has mounted
@@ -84,24 +113,14 @@ export const CandyCanvas = () => {
    */
   useEffect(() => {
     const difference = difference_container.difference;
-    const state = store.getState();
-    const counter = getCounterById(state, difference_container.counterId) as CandyCounter;
-    const color = counter
-      ? counter.color
+    const candyCounter = getCandyCountersById(difference_container.counterId, candyCounters);
+    const color = candyCounter
+      ? candyCounter.color
       : default_circle_color;
 
     if (difference > 0) {
       for (let i = 0; i < difference; i += 1) {
-        const circle = Bodies.circle(
-          getRandomCandyStartPosition(canvas_width),
-          canvas_height / 10,
-          candy_diameter,
-          {
-            render: {
-              fillStyle: color
-            }
-          }
-        );
+        const circle = createCircle(color);
         World.add(engine.world, [circle]);
         circles.push(circle);
       }
@@ -130,6 +149,15 @@ export const CandyCanvas = () => {
       circles = newCircles;
     }
   }, [difference_container]);
+
+  useEffect(() => {
+    const difference = difference_container.difference;
+    if (difference === 0 && difference_container.counterId === 'restored_state_no_counter_id') {
+      counters.forEach(counter => {
+        addCirclesSequentially(counter.value, counter);
+      });
+    }
+  }, [difference_container, counters]);
 
   return (
     <div

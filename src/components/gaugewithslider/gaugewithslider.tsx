@@ -69,12 +69,10 @@ export const GaugeWithSliderRedux = (props: iGaugeWithSliderRedux) => {
       label={props.candyCounter.name.plural}
       value={value}
       setValue={(value: number) => {
-        if (counter) {
-          dispatch(updateCounter({
-            ...counter,
-            value
-          }));
-        }
+        dispatch(updateCounter({
+          id: props.candyCounter.id,
+          value
+        }));
       }} />
   );
 }

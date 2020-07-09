@@ -40,7 +40,6 @@ export interface iCounterUpdateMessageTemplate {
 export interface iCounter {
   id: string;
   value: number;
-  updateMessageTemplate: Function;
 }
 
 export interface HistoryEntry {
@@ -227,5 +226,8 @@ export const store = createStore(
 );
 
 store.subscribe(throttle(() => {
-  saveState(store.getState());
+  saveState({
+    ...store.getState(),
+    difference_container: { difference: 0, counterId: 'restored_state_no_counter_id' }
+  });
 }, 1000))

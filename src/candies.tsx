@@ -14,6 +14,7 @@ export interface Candy {
 export interface CandyCounter extends iCounter {
   name: SingularPluralString;
   color: string;
+  updateMessageTemplate: Function;
 }
 
 export const candyCounterCreator = (candy: Candy, counter: iCounter): CandyCounter => {
@@ -56,7 +57,6 @@ export const blueBubbleGumsCounter = candyCounterCreator({
 }, {
   id: "1",
   value: 0,
-  updateMessageTemplate: () => {}
 });
 
 export const greenBubbleGumsCounter = candyCounterCreator({
@@ -68,7 +68,6 @@ export const greenBubbleGumsCounter = candyCounterCreator({
 }, {
   id: "2",
   value: 0,
-  updateMessageTemplate: () => {}
 });
 
 export const redCandiesCounter = candyCounterCreator({
@@ -80,7 +79,6 @@ export const redCandiesCounter = candyCounterCreator({
 }, {
   id: "3",
   value: 0,
-  updateMessageTemplate: () => {}
 });
 
 export const candyCounters = [
