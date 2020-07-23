@@ -5,7 +5,10 @@ import { GaugeWithSliderRedux } from './components/gaugewithslider/gaugewithslid
 import { InfoBoardRedux } from './components/infoboard/infoboard';
 import { CandyCanvas } from './components/candycanvas/candycanvas';
 import { store } from './store';
-import { blueBubbleGumsCounter, greenBubbleGumsCounter, redCandiesCounter } from './candies';
+import {
+  blueBubbleGumsCounter,
+  greenBubbleGumsCounter,
+  redCandiesCounter } from './candies';
 import 'rc-slider/assets/index.css';
 import './index.css';
 
