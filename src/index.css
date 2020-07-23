@@ -12,11 +12,11 @@ body {
 }
 
 #root {
-  font-size: 1vw;
+  font-size: calc(8px + 0.15vw);
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
-  grid-gap: 3vw;
-  width: 80%;
+  grid-gap: 1vw;
+  width: 60%;
   margin: 0 auto;
   grid-auto-rows: minmax(5em, auto);
 }
