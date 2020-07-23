@@ -1,8 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Matter from 'matter-js';
 import { candyCounters, getCandyCountersById } from '../../candies';
-import { getDifference, getCounters, iCounter } from '../../store';
+import {
+  getDifference,
+  setSerializedCanvasState,
+  getSerializedCanvasState,
+  store
+} from '../../store';
 import { randomIntFromInterval } from '../../utility';
 
 /* ==========================================================================
@@ -43,19 +48,12 @@ const createCircle = (color: string): Matter.Body => {
   );
 }
 
-function addCirclesSequentially(amount: number, counter: iCounter) {
-  if (amount > 0) {
-    const candyCounter = getCandyCountersById(counter.id, candyCounters);
-    const color = candyCounter
-      ? candyCounter.color
-      : default_circle_color;
-    const circle = createCircle(color);
-    World.add(engine.world, [circle]);
-    circles.push(circle);
-  }
-  window.setTimeout(() => {
-    addCirclesSequentially(amount - 1, counter);
-  }, 10);
+function storeSerializedStateOfCanvas() {
+  const serializedWorldState = JSON.stringify(
+    Composite.allBodies(engine.world),
+    (key, value) => (key === 'parent' || key === 'parts' || key === 'body') ? undefined : value
+  );
+  store.dispatch(setSerializedCanvasState(serializedWorldState));
 }
 
 /* ==========================================================================
@@ -66,7 +64,9 @@ function addCirclesSequentially(amount: number, counter: iCounter) {
 const Engine = Matter.Engine,
     Render = Matter.Render,
     World = Matter.World,
-    Bodies = Matter.Bodies;
+    Bodies = Matter.Bodies,
+    Body = Matter.Body,
+    Composite = Matter.Composite;
 
 // create an engine
 const engine = Engine.create();
@@ -80,7 +80,8 @@ let circles: Matter.Body[] = [];
 export const CandyCanvas = () => {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const difference_container = useSelector(getDifference);
-  const counters = useSelector(getCounters);
+  const serializedWorldState = useSelector(getSerializedCanvasState);
+  const dispatch = useDispatch();
 
   /**
    * Create and render our canvas when the component has mounted
@@ -108,7 +109,7 @@ export const CandyCanvas = () => {
   }, []);
 
   /**
-   * Add or remove elements from the canvas when counters
+   * Add or remove elements to and from the canvas when counters
    * in the store change.
    */
   useEffect(() => {
@@ -117,13 +118,14 @@ export const CandyCanvas = () => {
     const color = candyCounter
       ? candyCounter.color
       : default_circle_color;
-
+    // Add new elements
     if (difference > 0) {
       for (let i = 0; i < difference; i += 1) {
         const circle = createCircle(color);
         World.add(engine.world, [circle]);
         circles.push(circle);
       }
+    // Remove elements
     } else if (difference < 0) {
       interface Accumulator {
         circlesToRemove: Matter.Body[];
@@ -148,16 +150,35 @@ export const CandyCanvas = () => {
       circlesToRemove.forEach(circle => World.remove(engine.world, circle));
       circles = newCircles;
     }
-  }, [difference_container]);
+  }, [difference_container, dispatch]);
 
+  /**
+   * Serialize the state of all the objects on the canvas and store
+   * it in localstorage.
+   * With this serialized information, we can later restore the state
+   * of the canvas.
+   */
+  useEffect(() => {
+    window.addEventListener('beforeunload', storeSerializedStateOfCanvas);
+    return () => {
+      window.removeEventListener('beforeunload', storeSerializedStateOfCanvas);
+    }
+  });
+
+  /**
+   * Parse the serialized state from local storage
+   * Restore the state of the objects in the canvas
+   */
   useEffect(() => {
     const difference = difference_container.difference;
     if (difference === 0 && difference_container.counterId === 'restored_state_no_counter_id') {
-      counters.forEach(counter => {
-        addCirclesSequentially(counter.value, counter);
+      JSON.parse(serializedWorldState).forEach((bodyJSON: object) => {
+        const body = Body.create(bodyJSON);
+        World.add(engine.world, body);
+        circles.push(body);
       });
     }
-  }, [difference_container, counters]);
+  }, [difference_container, serializedWorldState, dispatch]);
 
   return (
     <div

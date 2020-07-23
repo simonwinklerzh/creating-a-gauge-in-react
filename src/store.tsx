@@ -49,6 +49,7 @@ export interface HistoryEntry {
 }
 
 export interface iCounterState {
+  serializedCanvasState: string;
   counters: iCounter[];
   history: HistoryEntry[];
   difference_container: {
@@ -72,6 +73,7 @@ export enum CounterActionType {
   UPDATE_COUNTER = 'UPDATE_COUNTER',
   REMOVE_COUNTER = 'REMOVE_COUNTER',
   ADD_HISTORY = 'ADD_HISTORY',
+  SET_SERIALIZED_CANVAS_STATE = 'SET_SERIALIZED_CANVAS_STATE'
 }
 
 type SFA<T, P> = { type: T, payload: P };
@@ -96,7 +98,10 @@ export const removeCounter = (payload: iCounter) =>
 export const addHistory = (payload: iCounterState['history']) =>
   createAction(CounterActionType.ADD_HISTORY, payload);
 
-const actions = { updateCounter, removeCounter, addHistory };
+export const setSerializedCanvasState = (payload: string) =>
+  createAction(CounterActionType.SET_SERIALIZED_CANVAS_STATE, payload);
+
+const actions = { updateCounter, removeCounter, addHistory, setSerializedCanvasState };
 type Action = ReturnType<typeof actions[keyof typeof actions]>;
 
 
@@ -126,6 +131,10 @@ export function getDifference(state: iCounterState): iCounterState['difference_c
   return state.difference_container;
 }
 
+export function getSerializedCanvasState(state: iCounterState): iCounterState['serializedCanvasState'] {
+  return state.serializedCanvasState;
+}
+
 
 /* ==========================================================================
    Store
@@ -136,6 +145,7 @@ const countersHistoryLimit = 30;
 
 function counters(
   state: iCounterState = {
+    serializedCanvasState: '',
     counters: [],
     history: [],
     difference_container: {
@@ -203,6 +213,11 @@ function counters(
       return {
         ...state,
         history: action.payload
+      }
+    case CounterActionType.SET_SERIALIZED_CANVAS_STATE:
+      return {
+        ...state,
+        serializedCanvasState: action.payload
       }
     default:
       return state;
