@@ -16,7 +16,7 @@ body {
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
   grid-gap: 1vw;
-  width: 60%;
+  width: calc(300px + 30%);
   margin: 0 auto;
   grid-auto-rows: minmax(5em, auto);
 }
