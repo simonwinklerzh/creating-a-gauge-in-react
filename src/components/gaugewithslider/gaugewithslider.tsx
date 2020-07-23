@@ -29,7 +29,8 @@ export const GaugeWithSlider = ({
   label = "Speed",
   color,
   units = "kilometers per hour",
-  colspan = 1
+  colspan = 1,
+  id
 }: iGaugeWithSlider) => {
   return (
     <div
@@ -42,7 +43,9 @@ export const GaugeWithSlider = ({
         min,
         max,
         label,
-        units
+        units,
+        color,
+        id
       }} />
       <div className="gaugewithslider__slider">
         <Slider {...{
@@ -68,6 +71,8 @@ export const GaugeWithSliderRedux = (props: iGaugeWithSliderRedux) => {
       {...props}
       label={props.candyCounter.name.plural}
       value={value}
+      color={props.candyCounter.color}
+      id={props.candyCounter.id}
       setValue={(value: number) => {
         dispatch(updateCounter({
           id: props.candyCounter.id,

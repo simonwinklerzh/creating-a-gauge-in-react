@@ -2,6 +2,7 @@ import React from 'react';
 import { arc } from 'd3-shape';
 import { scaleLinear } from 'd3-scale';
 import { format } from 'd3-format';
+import { color as d3Color }  from  'd3-color';
 
 // Helper function
 const getCoordsOnArc = (angle: number, offset=10) => [
@@ -16,14 +17,17 @@ export interface iGauge {
   readonly label?: string;
   readonly units?: string;
   readonly color?: string;
+  readonly id?: string;
 }
 
 export const Gauge = ({
   value = 50,
   min = 0,
   max = 100,
+  color = '#4834d4',
   units,
-  label
+  label,
+  id = '1'
 }: iGauge) => {
   const backgroundArc = arc()
   .cornerRadius(1)({
@@ -56,16 +60,21 @@ export const Gauge = ({
 
   const colorScale = scaleLinear<string>()
     .domain([0, 1])
-    .range(['#dbdbe7', '#4834d4']);
+    .range(['#dbdbe7', color]);
 
   const gradientSteps = colorScale
     .ticks(10) // Create 10 even steps between 0 and 1 (see `.domain([0, 1])`)
-    .map(colorScale); // Map numeric values to color values between `.range(['#dbdbe7', '#4834d4'])`
+    .map(colorScale); // Map numeric values to color values between `.range(['#dbdbe7', color])`
 
   const markerLocation = getCoordsOnArc(
     valueEndAngle,
     1 - ((1 - 0.65) / 2)
   );
+
+  const parsedColor = d3Color(color);
+  const circleBorderColor = parsedColor !== null
+    ? parsedColor.darker().toString()
+    : '#ffffff'
 
   return (
     <div
@@ -81,7 +90,7 @@ export const Gauge = ({
         ].join(' ')}>
         <defs>
           <linearGradient
-            id="gauge-gradient"
+            id={`gauge-gradient-${id}`}
             gradientUnits="userSpaceOnUse"
             x1="-1"
             x2="1"
@@ -107,7 +116,7 @@ export const Gauge = ({
         {!!valueArc && (
           <path
             d={valueArc}
-            fill="url(#gauge-gradient)">
+            fill={`url(#gauge-gradient-${id})`}>
           </path>
         )}
         <line
@@ -119,7 +128,7 @@ export const Gauge = ({
           cx={markerLocation[0]}
           cy={markerLocation[1]}
           r="0.2"
-          stroke="#2c3e50"
+          stroke={circleBorderColor}
           strokeWidth="0.01"
           fill={colorScale(percent)}>
         </circle>
@@ -128,7 +137,7 @@ export const Gauge = ({
           transform={`rotate(${
             valueEndAngle * (180 / Math.PI)
           }) translate(-0.2, -0.33)`}
-          fill="#6a6a85"
+          fill={color}
         />
       </svg>
       <div className="gauge__value">
