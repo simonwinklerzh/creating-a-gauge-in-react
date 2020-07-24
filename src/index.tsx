@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { GaugeWithSliderRedux } from './components/gaugewithslider/gaugewithslider';
 import { InfoBoardRedux } from './components/infoboard/infoboard';
 import { CandyCanvas } from './components/candycanvas/candycanvas';
+import { ResetButtonRedux } from './components/button/button';
 import { store } from './store';
 import {
   blueBubbleGumsCounter,
@@ -46,6 +47,7 @@ ReactDOM.render(
         title="Total number of candies"
         subTitle="Candies change history:" />
       <CandyCanvas />
+      <ResetButtonRedux />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

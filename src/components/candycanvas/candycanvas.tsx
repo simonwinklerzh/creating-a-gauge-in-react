@@ -6,6 +6,7 @@ import {
   getDifference,
   setSerializedCanvasState,
   getSerializedCanvasState,
+  getCounters,
   store
 } from '../../store';
 import { randomIntFromInterval } from '../../utility';
@@ -82,6 +83,7 @@ export const CandyCanvas = () => {
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const difference_container = useSelector(getDifference);
   const serializedWorldState = useSelector(getSerializedCanvasState);
+  const counters = useSelector(getCounters);
   const dispatch = useDispatch();
 
   /**
@@ -173,13 +175,27 @@ export const CandyCanvas = () => {
   useEffect(() => {
     const difference = difference_container.difference;
     if (difference === 0 && difference_container.counterId === 'restored_state_no_counter_id') {
-      JSON.parse(serializedWorldState).forEach((bodyJSON: object) => {
-        const body = Body.create(bodyJSON);
-        World.add(engine.world, body);
-        circles.push(body);
-      });
+      try {
+        JSON.parse(serializedWorldState).forEach((bodyJSON: object) => {
+          const body = Body.create(bodyJSON);
+          World.add(engine.world, body);
+          circles.push(body);
+        });
+      } catch (e) {
+        // No serializedWorldState found in localstorage
+      }
     }
   }, [difference_container, serializedWorldState, dispatch]);
+
+  /**
+   * Remove all objects from the canvas when the counters have been reset.
+   */
+  useEffect(() => {
+    if (!counters.length) {
+      World.clear(engine.world, true);
+      circles = [];
+    }
+  }, [counters]);
 
   return (
     <div

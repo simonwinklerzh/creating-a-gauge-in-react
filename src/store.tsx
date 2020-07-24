@@ -73,7 +73,8 @@ export enum CounterActionType {
   UPDATE_COUNTER = 'UPDATE_COUNTER',
   REMOVE_COUNTER = 'REMOVE_COUNTER',
   ADD_HISTORY = 'ADD_HISTORY',
-  SET_SERIALIZED_CANVAS_STATE = 'SET_SERIALIZED_CANVAS_STATE'
+  SET_SERIALIZED_CANVAS_STATE = 'SET_SERIALIZED_CANVAS_STATE',
+  CLEAR_STATE = 'CLEAR_STATE'
 }
 
 type SFA<T, P> = { type: T, payload: P };
@@ -101,7 +102,17 @@ export const addHistory = (payload: iCounterState['history']) =>
 export const setSerializedCanvasState = (payload: string) =>
   createAction(CounterActionType.SET_SERIALIZED_CANVAS_STATE, payload);
 
-const actions = { updateCounter, removeCounter, addHistory, setSerializedCanvasState };
+export const clearState = (payload: undefined) =>
+  createAction(CounterActionType.CLEAR_STATE, payload);
+
+const actions = {
+  updateCounter,
+  removeCounter,
+  addHistory,
+  setSerializedCanvasState,
+  clearState
+};
+
 type Action = ReturnType<typeof actions[keyof typeof actions]>;
 
 
@@ -143,16 +154,18 @@ export function getSerializedCanvasState(state: iCounterState): iCounterState['s
 
 const countersHistoryLimit = 30;
 
+const initialState: iCounterState = {
+  serializedCanvasState: '',
+  counters: [],
+  history: [],
+  difference_container: {
+    difference: 0,
+    counterId: ''
+  }
+};
+
 function counters(
-  state: iCounterState = {
-    serializedCanvasState: '',
-    counters: [],
-    history: [],
-    difference_container: {
-      difference: 0,
-      counterId: ''
-    }
-  },
+  state = initialState,
   action: Action
 ) : iCounterState {
   switch (action.type) {
@@ -218,6 +231,10 @@ function counters(
       return {
         ...state,
         serializedCanvasState: action.payload
+      }
+    case CounterActionType.CLEAR_STATE:
+      return {
+        ...initialState
       }
     default:
       return state;
