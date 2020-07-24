@@ -46,8 +46,13 @@ ReactDOM.render(
       <InfoBoardRedux
         title="Total number of candies"
         subTitle="Candies change history:" />
-      <CandyCanvas />
-      <ResetButtonRedux />
+      <div
+      className="layout__canvas-and-control-buttons">
+        <CandyCanvas />
+        <div className="controlbuttonscontainer">
+          <ResetButtonRedux />
+        </div>
+      </div>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -4,6 +4,6 @@
 }
 
 .candycanvas canvas {
-  position: absolute;
+  position: relative;
   width: 100%;
 }
