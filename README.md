@@ -1,6 +1,22 @@
 # Creating a Gauge in React
 
-Following the Tutorial [Creating a Gauge in React](https://wattenberger.com/blog/gauge) from Amelia Wattenberger
+This fun Project started by me following the Tutorial [Creating a Gauge in React](https://wattenberger.com/blog/gauge) from Amelia Wattenberger
+
+I then continued by building a small user interface around the created 'Gauge' components and created a few new components. In the user interface you can do some pretty pointless actions.
+
+![](./screenshot-for-readme.jpg)
+
+The project ended up being a small playground to experiment with some technologies:
+
+* Typescript
+* React hooks
+* Redux
+* Canvas / Matter.js
+* SVG
+
+## Run the project
+
+The project uses create-react-app. Start the project by using `npm start`. 
 
 ---
 **NOTE**
