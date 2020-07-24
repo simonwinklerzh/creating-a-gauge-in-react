@@ -22,7 +22,7 @@ export const Button = ({
 );
 
 export const ResetButtonRedux = () => (
-  <Button modifierClass="reset" text="Reset" clickHandler={handleResetButtonClick} />
+  <Button modifierClass="reset" text="🔄 Reset" clickHandler={handleResetButtonClick} />
 );
 
 function handleResetButtonClick() {

@@ -50,6 +50,7 @@ ReactDOM.render(
       className="layout__canvas-and-control-buttons">
         <CandyCanvas />
         <div className="controlbuttonscontainer">
+          <p className="controlbuttonscontainer__title"><b>Restore the initial state</b></p>
           <ResetButtonRedux />
         </div>
       </div>

@@ -2,3 +2,16 @@
   background: #ffffff;
   padding: 3em;
 }
+
+.controlbuttonscontainer button {
+  margin: 0 auto;
+  display: block;
+}
+
+.controlbuttonscontainer__title {
+  margin-top: 0;
+  font-weight: 900;
+  font-size: 1.3em;
+  color: #8b8ba7;
+  text-align: center;
+}
