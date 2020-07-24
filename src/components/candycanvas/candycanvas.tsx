@@ -17,7 +17,8 @@ import { randomIntFromInterval } from '../../utility';
 const canvas_width: number = 800;
 const canvas_height: number = 600;
 const candy_diameter: number = (canvas_width / 40) / 2;
-const default_circle_color = '#ffffff';
+const default_circle_color: string = '#ffffff';
+const canvas_background_color: string = '#1d3557';
 /**
  * Add a padding to make sure that candies are not created on the very
  * left or right hand border of the canvas.
@@ -94,7 +95,7 @@ export const CandyCanvas = () => {
           engine: engine,
           options: {
             wireframes: false,
-            background: '#120e2d',
+            background: canvas_background_color,
             width: canvas_width,
             height: canvas_height
           }

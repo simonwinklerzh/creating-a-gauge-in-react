@@ -8,6 +8,7 @@
 }
 
 .gauge__value {
+  color: #1d3557;
   margin-top: 0.4em;
   font-size: 3em;
   line-height: 1em;

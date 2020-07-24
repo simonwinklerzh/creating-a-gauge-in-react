@@ -53,7 +53,16 @@ export const GaugeWithSlider = ({
           min,
           max,
           marks: {[min]: String(min), [max]: String(max)},
-          onChange: setValue
+          onChange: setValue,
+          trackStyle: {
+            backgroundColor: '#1d3557'
+          },
+          handleStyle: {
+            borderColor: '#1d3557'
+          },
+          activeDotStyle: {
+            borderColor: '#1d3557'
+          }
         }} />
       </div>
     </div>

@@ -1,6 +1,6 @@
 .infoboard {
   padding: 3em;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   grid-column-start: span 4;
 }
 
@@ -22,6 +22,7 @@
 }
 
 .infoboard__value {
+  color: #1d3557;
   font-size: 2em;
   margin: 0;
   text-align: center;
@@ -31,7 +32,7 @@
 .infoboard__log {
   margin: 0;
   padding: 0 0.4em;
-  background-color: #120e2d;
+  background-color: #1d3557;
   overflow: auto;
   list-style-type: none;
   line-height: 1.3em;

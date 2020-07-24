@@ -53,7 +53,7 @@ export const blueBubbleGumsCounter = candyCounterCreator({
     singular: 'Blue bubble gum',
     plural: 'Blue bubble gums'
   },
-  color: '#5555ff'
+  color: '#457b9d'
 }, {
   id: "1",
   value: 0,
@@ -64,7 +64,7 @@ export const greenBubbleGumsCounter = candyCounterCreator({
     singular: 'Green bubble gum',
     plural: 'Green bubble gums'
   },
-  color: '#55ff55'
+  color: '#a8dadc'
 }, {
   id: "2",
   value: 0,
@@ -75,7 +75,7 @@ export const redCandiesCounter = candyCounterCreator({
     singular: 'Red candy',
     plural: 'Red candies'
   },
-  color: '#ff3333'
+  color: '#e63946'
 }, {
   id: "3",
   value: 0,
